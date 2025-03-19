@@ -1,0 +1,71 @@
+/* ============ Background.css ============ */
+
+/* Container behind all content */
+.bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1; /* So content is on top */
+  }
+  
+  /* Shared shape styles */
+  .bg-shape1,
+  .bg-shape2,
+  .bg-shape3,
+  .bg-shape4 {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(200px);
+    opacity: 0.2;
+  }
+  
+  /* ====================== 
+     SHAPE #4 (Dark top) 
+     #0A0C10
+  ====================== */
+  .bg-shape4 {
+    /* Slightly larger so it covers top area well */
+    width: 600px;
+    height: 600px;
+  
+    /* Place it near the top, horizontally centered */
+    top: 13%;
+    left: 20%;
+  
+    background-color: #0A0C10; 
+    opacity: 0.3; /* More visible than the others */
+
+  }
+  
+  /* Blue shape (#1) */
+  .bg-shape1 {
+    width: 500px;
+    height: 500px;
+    top: 25%;
+    left: 25%;
+    background-color: #18457C;
+    opacity: 0.4;
+  }
+  
+  /* Purple shape (#2) */
+  .bg-shape2 {
+    width: 500px;
+    height: 500px;
+    top: 30%;
+    left: 40%;
+    background-color: #84368A;
+    opacity: 0.4;
+  }
+  
+  /* Pink shape (#3) */
+  .bg-shape3 {
+    width: 500px;
+    height: 500px;
+    top: 60%;
+    left: 70%;
+    background-color: #E52996;
+    opacity: 0.4;
+  }

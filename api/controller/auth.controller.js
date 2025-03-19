@@ -1,0 +1,132 @@
+// api/controller/auth.controller.js
+import bcryptjs from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
+import { createError } from '../utils/error.js';
+
+export const signup = async (req, res, next) => {
+  const { username, email, password } = req.body;
+  try {
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword });
+    await newUser.save();
+
+    // OPTIONAL: Auto-login after signup by creating a token
+    // If you prefer the user to sign in manually, remove this block
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '2h',
+    });
+
+    // Return user + token in JSON
+    // Or you can omit token if you want them to sign in separately
+    const { password: pass, ...rest } = newUser._doc;
+    return res
+      .cookie('access_token', token, { httpOnly: true })
+      .status(201)
+      .json({
+        success: true,
+        message: 'User created successfully!',
+        token, // <-- so frontend can store it
+        user: rest,
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signin = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const validUser = await User.findOne({ email });
+    if (!validUser) {
+      return next(createError(404, 'User not found!'));
+    }
+
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
+    if (!validPassword) {
+      return next(createError(401, 'Wrong credentials!'));
+    }
+
+    // Create a token with user ID
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '2h',
+    });
+
+    const { password: pass, ...rest } = validUser._doc;
+
+    // Return cookie + token in JSON
+    // So the frontend can do: localStorage.setItem("accessToken", data.token)
+    return res
+      .cookie('access_token', token, { httpOnly: true })
+      .status(200)
+      .json({
+        success: true,
+        token, // <-- crucial for front-end
+        user: rest,
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const google = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '2h',
+      });
+      const { password, ...rest } = user._doc;
+      return res
+        .cookie('access_token', token, { httpOnly: true })
+        .status(200)
+        .json({
+          success: true,
+          token, // so front-end can store it if ignoring cookies
+          user: rest,
+        });
+    } else {
+      // Create new user
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+      const newUser = new User({
+        username:
+          req.body.name.split(' ').join('').toLowerCase() +
+          Math.random().toString(36).slice(-4),
+        email: req.body.email,
+        password: hashedPassword,
+        avatar: req.body.photo,
+      });
+      await newUser.save();
+
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: '2h',
+      });
+      const { password, ...rest } = newUser._doc;
+      return res
+        .cookie('access_token', token, { httpOnly: true })
+        .status(200)
+        .json({
+          success: true,
+          token,
+          user: rest,
+        });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signOut = async (req, res, next) => {
+  try {
+    res.clearCookie('access_token');
+    return res.status(200).json({
+      success: true,
+      message: 'User has been logged out!',
+    });
+  } catch (err) {
+    next(err);
+  }
+};

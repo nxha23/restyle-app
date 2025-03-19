@@ -1,0 +1,137 @@
+/* Hide scrollbars */
+html, body {
+  scrollbar-width: none;         /* for Firefox */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;                 /* for Chrome, Safari, Opera */
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6); /* dark overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* The semi-transparent modal box */
+.modal-content {
+  background-color: rgba(71, 69, 69, 0.7);
+  border-radius: 20px; /* more rounded corners */
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  color: #fff;
+  position: relative;
+
+  /* for scrollable content when editing is long */
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Close button (top-right) */
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #fff;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* Image in view or edit mode - let it expand, but contain the full image */
+.item-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Title under the image */
+.item-title {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Buttons row */
+.btn-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* The "Edit" and "Delete" buttons share a style */
+.edit-btn,
+.delete-btn {
+  background-color: rgba(71, 69, 69, 0.7);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+  opacity: 0.8;
+}
+
+/* Error text in red */
+.error-text {
+  color: red;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* The form in "edit" mode */
+.edit-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* The label + input fields */
+.label {
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+/* Use a semi-transparent gray background for edit inputs */
+.edit-input {
+  background-color: rgba(71, 69, 69, 0.3);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* In "view-mode," everything is also in a column but we handle them with default styles */
+.view-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content {
+  /* Existing styles... */
+  max-height: 80vh;
+  overflow-y: auto;
+
+  /* Hide scrollbars for this container */
+  scrollbar-width: none; /* for Firefox */
+}
+.modal-content::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, Opera */
+}

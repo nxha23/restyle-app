@@ -1,0 +1,281 @@
+/* Overall Home Page Container */
+.home-page {
+    color: #fff;
+    min-height: 100vh;
+    padding: 2rem;
+    font-family: "Outfit", sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Error message in red */
+  .error-message {
+    color: red;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* TOP ROW: Nudge and Streaks */
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* 
+     .left-col: now has a translucent background box 
+     similar to .right-col (streaks-section).
+  */
+  .left-col {
+    flex: 2;
+    background-color: rgba(255, 255, 255, 0.05); /* ADDED */
+    border-radius: 10px;                         /* ADDED */
+    padding: 1.5rem;                             /* ADDED */
+  }
+  
+  /* Right column: Streaks box */
+  .right-col {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    height: fit-content;
+  }
+  
+  /* Nudge Section */
+  .nudge-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .nudge-text {
+    font-size: 1.1rem;
+    color: #ccc;
+  }
+  
+  /* Streaks Section */
+  .streaks-section {
+    border-radius: 10px;
+    text-align: center;
+    height: fit-content;
+  }
+  
+  .streaks-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  
+  .streaks-count {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .streaks-subtext {
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+  
+  /* TOMORROW ROW: Outfit for Tomorrow and Weather */
+  .tomorrow-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    
+  }
+  
+  .tomorrow-outfit-section,
+  .weather-section {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  /* Outfit for Tomorrow Section */
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .outfit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .outfit-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .no-outfit-message {
+    font-size: 1rem;
+    color: #ccc;
+  }
+  
+  .plan-outfit-button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s ease;
+  }
+  
+  .plan-outfit-button:hover {
+    background-color: #66bb6a;
+  }
+  
+  .outfit-date {
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  
+  /* Weather Section */
+  .weather-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .weather-desc {
+    color: #ccc;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* 
+     Ongoing Challenges Section 
+     - Now we ensure .challenges-heading is bigger 
+     - Use !important if something else overrides it
+  */
+  .challenges-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+  }
+  
+  .challenges-heading {
+    font-size: 1.5rem !important;  /* Increased & !important to override */
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .no-challenges {
+    text-align: center;
+    color: #999;
+  }
+  
+  .challenge-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .challenge-item {
+    cursor: pointer;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  .challenge-emoji {
+    margin-right: 0.25rem;
+    font-size: 1.25rem;
+    vertical-align: middle;
+  }
+  
+  .challenge-progressbar-container {
+    width: 100%;
+    height: 13px;
+    background-color: #444;
+    border-radius: 4px;
+    margin-top: 0.25rem;
+    position: relative;
+  }
+  
+  .challenge-progressbar-fill {
+    background-color: #4caf50;
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  
+  .modal-content {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 2rem;
+    color: #fff;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .modal-content h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  .progress-bar-container {
+    width: 100%;
+    height: 15px;
+    background-color: #444;
+    border-radius: 5px;
+    margin: 1rem 0;
+  }
+  
+  .progress-bar-fill {
+    background-color: #4caf50;
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+  
+  .close-modal-btn,
+  .modal-content button {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .close-modal-btn:hover,
+  .modal-content button:hover {
+    background-color: #66bb6a;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  

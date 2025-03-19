@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap');
+
+.add-wardrobe-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  font-family: "Lato", sans-serif;
+  color: #fff;
+}
+
+/* Main container with 50% #474545 background */
+.add-wardrobe-container {
+  background-color: rgba(71, 69, 69, 0.5); /* 50% #474545 */
+  border-radius: 20px;
+  width: 1000px; 
+  padding: 2rem;
+}
+
+.add-wardrobe-container h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+}
+
+/* Error message in red */
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* The form with left (fields) and right (upload) in a row */
+.add-wardrobe-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap; /* so it can wrap on smaller screens if needed */
+  gap: 1rem;
+}
+
+/* Left column for text fields */
+.form-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 250px;
+}
+
+/* Right column for upload */
+.form-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 250px;
+}
+
+/* Input fields (text, date, file, and select) */
+.add-wardrobe-form input[type="text"],
+.add-wardrobe-form input[type="date"],
+.add-wardrobe-form input[type="file"],
+.add-wardrobe-form select {
+  background-color: rgba(71, 69, 69, 0.3);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* Buttons: "Add Item" and "Upload" */
+.add-wardrobe-form button {
+  background-color: rgba(71, 69, 69, 0.7);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.add-wardrobe-form button:hover {
+  transform: scale(1.05);
+}
+
+/* The container for "Choose file" + "Upload" side by side */
+.upload-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* The preview area after a successful upload */
+.upload-preview {
+  margin-top: 1rem;
+}
+
+.upload-preview h2 {
+  margin-bottom: 0.5rem;
+}
+
+/* The uploaded image thumbnail */
+.uploaded-image {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #fff;
+}

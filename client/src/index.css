@@ -1,0 +1,9 @@
+/* index.css (or global stylesheet) */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0A0C10; /* Dark fallback color */
+}
