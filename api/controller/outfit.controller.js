@@ -48,12 +48,9 @@ export const createOutfit = async (req, res, next) => {
 
     await newOutfit.save();
 
-    // Increment the wearCount for each wardrobe item used
-    for (const item of validatedItems) {
-      await WardrobeItem.findByIdAndUpdate(item.wardrobeItemId, {
-        $inc: { wearCount: 1 },
-      });
-    }
+    // NOTE: The wearCount increment has been removed here
+    // If you only want wearCount to go up when the outfit is chosen as the daily outfit,
+    // do NOT increment wearCount in createOutfit.
 
     res.status(201).json({
       success: true,

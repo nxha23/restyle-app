@@ -64,7 +64,7 @@ export default function SignIn() {
           <input
             id="identifier"
             type="text"
-            placeholder="Email or Username"
+            placeholder="Email"
             onChange={handleChange}
             required
           />

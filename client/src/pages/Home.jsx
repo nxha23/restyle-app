@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import localforage from "localforage"; // Added for caching
 import "../styles/Home.css"; // Our custom CSS
 
 export default function Home() {
@@ -16,6 +17,13 @@ export default function Home() {
 
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+
+  // Retrieve currentUser from localStorage (assumes it's stored as JSON)
+  const storedUser = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")) : null;
+
+  // Helper: Build user-specific cache key
+  const getCacheKey = (baseKey) =>
+    storedUser ? `${baseKey}-${storedUser._id}` : baseKey;
 
   // Use Vite's environment variable:
   const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
@@ -44,14 +52,13 @@ export default function Home() {
       .then((data) => {
         if (data.success) {
           const allChallenges = data.challenges || [];
-          // Filter to show only unlocked on the Home page
           const unlocked = allChallenges.filter((ch) => !ch.locked);
           setChallenges(unlocked);
         }
       })
       .catch((err) => setError(err.message));
 
-    // 3) Fetch the *actual* streak from the server
+    // 3) Fetch the streak
     fetch("/api/streak", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => {
@@ -61,24 +68,35 @@ export default function Home() {
       })
       .catch((err) => setError(err.message));
 
-    // 4) Fetch outfit for tomorrow
+    // 4) Fetch outfit for tomorrow with localForage caching
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const formattedTomorrow = tomorrow.toISOString().split("T")[0];
-    fetch(`/api/dailyOutfit/get/${formattedTomorrow}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const cacheKey = getCacheKey(`tomorrowOutfit-${formattedTomorrow}`);
+    
+    // Load cached outfit first
+    localforage.getItem(cacheKey)
+      .then((cachedOutfit) => {
+        if (cachedOutfit) {
+          setTomorrowOutfit(cachedOutfit);
+        }
+        // Fetch fresh data in background
+        return fetch(`/api/dailyOutfit/get/${formattedTomorrow}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      })
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.dailyOutfit) {
           setTomorrowOutfit(data.dailyOutfit);
+          localforage.setItem(cacheKey, data.dailyOutfit);
         } else {
           setTomorrowOutfit(null);
         }
       })
       .catch((err) => setError(err.message));
 
-    // 5) Fetch weather from WeatherAPI.com using geolocation
+    // 5) Fetch weather using geolocation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -113,7 +131,6 @@ export default function Home() {
         },
         (err) => {
           console.error("Geolocation error:", err);
-          // Optionally, set a fallback location here
         }
       );
     }
@@ -172,9 +189,7 @@ export default function Home() {
       if (data.success) {
         setChallenges((prev) =>
           prev.map((ch) =>
-            ch._id === selectedChallenge._id
-              ? { ...ch, progress: newProgress }
-              : ch
+            ch._id === selectedChallenge._id ? { ...ch, progress: newProgress } : ch
           )
         );
         setSelectedChallenge((prev) =>
@@ -204,9 +219,7 @@ export default function Home() {
       if (data.success) {
         setChallenges((prev) =>
           prev.map((ch) =>
-            ch._id === selectedChallenge._id
-              ? { ...ch, progress: newProgress }
-              : ch
+            ch._id === selectedChallenge._id ? { ...ch, progress: newProgress } : ch
           )
         );
         setSelectedChallenge((prev) =>
@@ -225,9 +238,6 @@ export default function Home() {
     setSelectedChallenge(null);
   };
 
-  // -------------------------
-  // Rendering
-  // -------------------------
   return (
     <div className="home-page">
       {error && <p className="error-message">{error}</p>}
@@ -304,24 +314,17 @@ export default function Home() {
           <ul className="challenge-list">
             {challenges.map((ch) => {
               const percentage = Math.round((ch.progress / ch.goal) * 100);
-              const isComplete = percentage >= 100; // same logic as Statistics
-
+              const isComplete = percentage >= 100;
               return (
                 <li
                   key={ch._id}
                   className="challenge-item"
                   onClick={() => handleChallengeClick(ch)}
                 >
-                  {/* Show locked, complete, or unlocked icons */}
                   <span className="challenge-emoji">
-                    {ch.locked
-                      ? "🔐"
-                      : isComplete
-                      ? "🎉"
-                      : "🔓"}
+                    {ch.locked ? "🔐" : isComplete ? "🎉" : "🔓"}
                   </span>{" "}
                   {ch.challengeType}
-                  {/* If not locked and not complete, show progress */}
                   {!ch.locked && !isComplete && (
                     <>
                       {" "}
@@ -334,7 +337,6 @@ export default function Home() {
                       </div>
                     </>
                   )}
-                  {/* If not locked and complete, show Congrats */}
                   {!ch.locked && isComplete && (
                     <> - Congratulations! Challenge completed!</>
                   )}
@@ -357,17 +359,13 @@ export default function Home() {
                   <button onClick={handleUnlockChallenge}>
                     Unlock Challenge
                   </button>
-                  <button
-                    onClick={handleCloseModal}
-                    className="close-modal-btn"
-                  >
+                  <button onClick={handleCloseModal} className="close-modal-btn">
                     Close
                   </button>
                 </div>
               </>
             ) : (
               <>
-                {/* If the challenge is unlocked, show progress or completion */}
                 {selectedChallenge.progress >= selectedChallenge.goal ? (
                   <p>Congrats! You’ve completed this challenge!</p>
                 ) : (
@@ -381,9 +379,7 @@ export default function Home() {
                         className="progress-bar-fill"
                         style={{
                           width: `${
-                            (selectedChallenge.progress /
-                              selectedChallenge.goal) *
-                            100
+                            (selectedChallenge.progress / selectedChallenge.goal) * 100
                           }%`,
                         }}
                       ></div>
@@ -391,14 +387,9 @@ export default function Home() {
                   </>
                 )}
                 <div className="button-row">
-                  <button onClick={handleLogProgress}>
-                    Log Progress (+1)
-                  </button>
+                  <button onClick={handleLogProgress}>Log Progress (+1)</button>
                   <button onClick={handleUnlogDay}>Unlog Day (−1)</button>
-                  <button
-                    onClick={handleCloseModal}
-                    className="close-modal-btn"
-                  >
+                  <button onClick={handleCloseModal} className="close-modal-btn">
                     Close
                   </button>
                 </div>

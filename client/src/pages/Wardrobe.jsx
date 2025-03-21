@@ -14,26 +14,30 @@ export default function Wardrobe() {
   const [outfits, setOutfits] = useState([]);
   const [error, setError] = useState(null);
 
-  // For editing/deleting a wardrobe item
   const [selectedItem, setSelectedItem] = useState(null);
   const [showItemModal, setShowItemModal] = useState(false);
-
-  // For outfits
   const [selectedOutfit, setSelectedOutfit] = useState(null);
   const [showOutfitModal, setShowOutfitModal] = useState(false);
 
-  // Refs for horizontal scrolling
   const wardrobeRef = useRef(null);
   const outfitsRef = useRef(null);
 
+  const token = localStorage.getItem("accessToken");
+
+  // Helper for user-specific keys
+  const getCacheKey = (baseKey) =>
+    currentUser ? `${baseKey}-${currentUser._id}` : baseKey;
+
   useEffect(() => {
-    loadCachedData(); // Load instantly from localForage
-    fetchData();      // Fetch fresh data from backend in the background
+    loadCachedData();
+    fetchData();
   }, []);
 
   const loadCachedData = async () => {
-    const cached = await localforage.getItem("wardrobeItems");
-    if (cached) setWardrobeItems(cached);
+    const cachedWardrobe = await localforage.getItem(getCacheKey("wardrobeItems"));
+    if (cachedWardrobe) setWardrobeItems(cachedWardrobe);
+    const cachedOutfits = await localforage.getItem(getCacheKey("outfits"));
+    if (cachedOutfits) setOutfits(cachedOutfits);
   };
 
   const fetchData = async () => {
@@ -46,7 +50,6 @@ export default function Wardrobe() {
       setError("No current user found. Please log in.");
       return;
     }
-
     try {
       const [itemsRes, outfitsRes] = await Promise.all([
         fetch("/api/wardrobe/get", {
@@ -62,7 +65,6 @@ export default function Wardrobe() {
           },
         }),
       ]);
-
       const dataItems = await itemsRes.json();
       const dataOutfits = await outfitsRes.json();
 
@@ -70,20 +72,19 @@ export default function Wardrobe() {
         setError(dataItems.message || "Failed to load wardrobe items.");
       } else {
         setWardrobeItems(dataItems.items);
-        await localforage.setItem("wardrobeItems", dataItems.items);
+        await localforage.setItem(getCacheKey("wardrobeItems"), dataItems.items);
       }
-
       if (!dataOutfits.success) {
         setError(dataOutfits.message || "Failed to load outfits.");
       } else {
         setOutfits(dataOutfits.outfits);
+        await localforage.setItem(getCacheKey("outfits"), dataOutfits.outfits);
       }
     } catch (err) {
       setError("Failed to fetch data.");
     }
   };
 
-  // Scroll handlers for Wardrobe
   const scrollWardrobeLeft = () => {
     wardrobeRef.current?.scrollBy({ left: -300, behavior: "smooth" });
   };
@@ -91,7 +92,6 @@ export default function Wardrobe() {
     wardrobeRef.current?.scrollBy({ left: 300, behavior: "smooth" });
   };
 
-  // Scroll handlers for Outfits
   const scrollOutfitsLeft = () => {
     outfitsRef.current?.scrollBy({ left: -300, behavior: "smooth" });
   };
@@ -99,7 +99,6 @@ export default function Wardrobe() {
     outfitsRef.current?.scrollBy({ left: 300, behavior: "smooth" });
   };
 
-  // Wardrobe item click => open modal
   const handleItemClick = (item) => {
     setSelectedItem(item);
     setShowItemModal(true);
@@ -111,17 +110,14 @@ export default function Wardrobe() {
     await fetchData();
   };
 
-  // Delete an outfit
   const handleDeleteOutfit = async (id) => {
     const token = localStorage.getItem("accessToken");
     if (!token || !currentUser) return;
-
     try {
       await fetch(`/api/outfit/delete/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      // Remove from local state
       const updatedOutfits = outfits.filter((o) => o._id !== id);
       setOutfits(updatedOutfits);
     } catch (err) {
@@ -129,7 +125,6 @@ export default function Wardrobe() {
     }
   };
 
-  // Outfit click => open DeleteOutfitModal
   const handleOutfitClick = (outfit) => {
     setSelectedOutfit(outfit);
     setShowOutfitModal(true);
@@ -150,7 +145,6 @@ export default function Wardrobe() {
         </div>
 
         <div ref={wardrobeRef} className="wardrobe-grid">
-          {/* + Add Item Card */}
           <div
             onClick={() => navigate("/add-wardrobe-item")}
             className="wardrobe-card add-card"
@@ -181,7 +175,6 @@ export default function Wardrobe() {
         </div>
 
         <div ref={outfitsRef} className="wardrobe-grid">
-          {/* + Create Outfit Card */}
           <div
             onClick={() => navigate("/create-outfit")}
             className="wardrobe-card add-card outfit-card"
@@ -207,7 +200,6 @@ export default function Wardrobe() {
         </div>
       </div>
 
-      {/* Modal for editing/deleting a wardrobe item */}
       {showItemModal && selectedItem && (
         <UpdateDeleteItems
           item={selectedItem}
@@ -216,7 +208,6 @@ export default function Wardrobe() {
         />
       )}
 
-      {/* Modal for deleting an outfit */}
       {showOutfitModal && selectedOutfit && (
         <DeleteOutfitModal
           outfit={selectedOutfit}

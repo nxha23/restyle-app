@@ -1,6 +1,6 @@
 // src/pages/Statistics.jsx
-
 import React, { useEffect, useState } from "react";
+import localforage from "localforage";
 import "../styles/Statistics.css";
 
 export default function Statistics() {
@@ -16,7 +16,12 @@ export default function Statistics() {
   const [streak, setStreak] = useState(0);
   const token = localStorage.getItem("accessToken");
 
-  // 1) Footprint lookup table (including fallback "average")
+  // Retrieve currentUser from localStorage (assumes it's stored as JSON)
+  const storedUser = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")) : null;
+  // Helper: user-specific cache keys
+  const statsCacheKey = storedUser ? `stats-${storedUser._id}` : "stats";
+  const sustainabilityCacheKey = storedUser ? `sustainability-${storedUser._id}` : "sustainability";
+
   const carbonFootprintMap = {
     top:       { co2:  5,  water: 2700 },
     hoodie:    { co2:  8,  water: 3000 },
@@ -28,7 +33,7 @@ export default function Statistics() {
     dress:     { co2: 15,  water: 3000 },
     jacket:    { co2: 20,  water: 1000 },
     shoes:     { co2: 14,  water: 8000 },
-    average:   { co2: 12,  water: 1000 }, // fallback for "other"
+    average:   { co2: 12,  water: 1000 },
   };
 
   useEffect(() => {
@@ -36,11 +41,29 @@ export default function Statistics() {
       setError("No token found. Please log in.");
       return;
     }
-    fetchStats();
-    fetchSustainability();
-    fetchChallenges();
+    const loadCachedData = async () => {
+      try {
+        const cachedStats = await localforage.getItem(statsCacheKey);
+        if (cachedStats) {
+          setStats(cachedStats);
+        }
+        const cachedSustainability = await localforage.getItem(sustainabilityCacheKey);
+        if (cachedSustainability) {
+          setSustainability(cachedSustainability);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-    // Fetch current streak
+    loadCachedData();
+
+    Promise.all([
+      fetchStats(),
+      fetchSustainability(),
+      fetchChallenges(),
+    ]).catch(console.error);
+
     fetch("/api/streak", {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -51,11 +74,10 @@ export default function Statistics() {
         }
       })
       .catch(console.error);
-  }, [token]);
+  }, [token, statsCacheKey, sustainabilityCacheKey]);
 
-  // 2) Fetch Wardrobe Stats
   const fetchStats = () => {
-    fetch("/api/wardrobe/statistics", {
+    return fetch("/api/wardrobe/statistics", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -66,24 +88,19 @@ export default function Statistics() {
         if (!data.success) {
           setError(data.message);
         } else {
-          // Sort "leastWorn" ascending
-          const sortedLeast = (data.leastWorn || []).sort(
-            (a, b) => a.wearCount - b.wearCount
-          );
-          // Sort "mostWorn" descending
-          const sortedMost = (data.mostWorn || []).sort(
-            (a, b) => b.wearCount - a.wearCount
-          );
-          setStats({
+          const sortedLeast = (data.leastWorn || []).sort((a, b) => a.wearCount - b.wearCount);
+          const sortedMost = (data.mostWorn || []).sort((a, b) => b.wearCount - a.wearCount);
+          const newStats = {
             mostWorn: sortedMost,
             leastWorn: sortedLeast,
-          });
+          };
+          setStats(newStats);
+          localforage.setItem(statsCacheKey, newStats);
         }
       })
       .catch((err) => setError(err.message));
   };
 
-  // 3) Fetch & Calculate Sustainability
   const fetchSustainability = async () => {
     try {
       const res = await fetch("/api/wardrobe/get", {
@@ -93,29 +110,25 @@ export default function Statistics() {
         },
       });
       const data = await res.json();
-
       if (!data.success) {
         setError(data.message);
       } else {
         const allItems = data.items || [];
         let totalCO2 = 0;
         let totalWater = 0;
-
         allItems.forEach((item) => {
-          const cat = item.category?.toLowerCase() || "average";
-          const { co2, water } =
-            carbonFootprintMap[cat] || carbonFootprintMap["average"];
-
-          // # of re-wears = (wearCount - 1)
+          const cat = item.itemCategory ? item.itemCategory.toLowerCase() : "average";
+          const { co2, water } = carbonFootprintMap[cat] || carbonFootprintMap["average"];
           const rewears = Math.max(0, item.wearCount - 1);
-          totalCO2   += co2   * rewears;
+          totalCO2 += co2 * rewears;
           totalWater += water * rewears;
         });
-
-        setSustainability({
+        const newSustainability = {
           co2Saved: totalCO2,
           waterSaved: totalWater,
-        });
+        };
+        setSustainability(newSustainability);
+        localforage.setItem(sustainabilityCacheKey, newSustainability);
       }
     } catch (error) {
       console.error(error);
@@ -123,9 +136,8 @@ export default function Statistics() {
     }
   };
 
-  // 4) Fetch Challenges
   const fetchChallenges = () => {
-    fetch("/api/challenge/all", {
+    return fetch("/api/challenge/all", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -137,7 +149,7 @@ export default function Statistics() {
       .catch(console.error);
   };
 
-  // Challenge/Modal logic
+  // Challenge/Modal logic remains unchanged
   const handleChallengeClick = (challenge) => {
     setSelectedChallenge(challenge);
     setShowModal(true);
@@ -145,17 +157,14 @@ export default function Statistics() {
   const handleUnlockChallenge = async () => {
     if (!selectedChallenge) return;
     try {
-      const res = await fetch(
-        `/api/challenge/update/${selectedChallenge._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ locked: false }),
-        }
-      );
+      const res = await fetch(`/api/challenge/update/${selectedChallenge._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ locked: false }),
+      });
       const data = await res.json();
       if (data.success) {
         setChallenges((prev) =>
@@ -163,9 +172,7 @@ export default function Statistics() {
             ch._id === selectedChallenge._id ? { ...ch, locked: false } : ch
           )
         );
-        setSelectedChallenge((prev) =>
-          prev ? { ...prev, locked: false } : prev
-        );
+        setSelectedChallenge((prev) => (prev ? { ...prev, locked: false } : prev));
       } else {
         console.error("Unlock failed:", data.message);
       }
@@ -175,34 +182,24 @@ export default function Statistics() {
   };
   const handleLogProgress = async () => {
     if (!selectedChallenge) return;
-    const newProgress = Math.min(
-      selectedChallenge.progress + 1,
-      selectedChallenge.goal
-    );
+    const newProgress = Math.min(selectedChallenge.progress + 1, selectedChallenge.goal);
     try {
-      const res = await fetch(
-        `/api/challenge/update/${selectedChallenge._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ progress: newProgress }),
-        }
-      );
+      const res = await fetch(`/api/challenge/update/${selectedChallenge._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ progress: newProgress }),
+      });
       const data = await res.json();
       if (data.success) {
         setChallenges((prev) =>
           prev.map((ch) =>
-            ch._id === selectedChallenge._id
-              ? { ...ch, progress: newProgress }
-              : ch
+            ch._id === selectedChallenge._id ? { ...ch, progress: newProgress } : ch
           )
         );
-        setSelectedChallenge((prev) =>
-          prev ? { ...prev, progress: newProgress } : prev
-        );
+        setSelectedChallenge((prev) => (prev ? { ...prev, progress: newProgress } : prev));
       } else {
         console.error("Log progress failed:", data.message);
       }
@@ -214,29 +211,22 @@ export default function Statistics() {
     if (!selectedChallenge) return;
     const newProgress = Math.max(selectedChallenge.progress - 1, 0);
     try {
-      const res = await fetch(
-        `/api/challenge/update/${selectedChallenge._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ progress: newProgress }),
-        }
-      );
+      const res = await fetch(`/api/challenge/update/${selectedChallenge._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ progress: newProgress }),
+      });
       const data = await res.json();
       if (data.success) {
         setChallenges((prev) =>
           prev.map((ch) =>
-            ch._id === selectedChallenge._id
-              ? { ...ch, progress: newProgress }
-              : ch
+            ch._id === selectedChallenge._id ? { ...ch, progress: newProgress } : ch
           )
         );
-        setSelectedChallenge((prev) =>
-          prev ? { ...prev, progress: newProgress } : prev
-        );
+        setSelectedChallenge((prev) => (prev ? { ...prev, progress: newProgress } : prev));
       } else {
         console.error("Unlog day failed:", data.message);
       }
@@ -271,7 +261,7 @@ export default function Statistics() {
         </div>
       </div>
 
-      {/* MAIN CONTENT: row with Most Worn on left, Least Worn on right, then challenges below */}
+      {/* MAIN CONTENT */}
       <div className="main-content">
         <div className="worn-section-row">
           {/* MOST WORN */}
@@ -369,16 +359,13 @@ export default function Statistics() {
           </div>
         </div>
 
-        {/* Challenges below Most/Least Worn */}
+        {/* Challenges */}
         <div className="challenges-section">
           <h2>C H A L L E N G E S</h2>
           <ul>
             {challenges.map((challenge) => {
-              const percentage = Math.round(
-                (challenge.progress / challenge.goal) * 100
-              );
-              const isComplete = percentage >= 100; // or === 100 if you want exact
-
+              const percentage = Math.round((challenge.progress / challenge.goal) * 100);
+              const isComplete = percentage >= 100;
               return (
                 <li
                   key={challenge._id}
@@ -386,17 +373,11 @@ export default function Statistics() {
                   onClick={() => handleChallengeClick(challenge)}
                 >
                   <span className="challenge-emoji">
-                    {challenge.locked
-                      ? "🔐"
-                      : isComplete
-                      ? "🎉"
-                      : "🔓"}
+                    {challenge.locked ? "🔐" : isComplete ? "🎉" : "🔓"}
                   </span>{" "}
-                  {/* Wrap challenge name in a bold span */}
                   <span className="challenge-name">
                     {challenge.challengeType}
                   </span>
-                  {/* If not locked and not complete, show progress bar */}
                   {!challenge.locked && !isComplete && (
                     <>
                       {" "}
@@ -409,7 +390,6 @@ export default function Statistics() {
                       </div>
                     </>
                   )}
-                  {/* If not locked and complete, show "Congrats!" message */}
                   {!challenge.locked && isComplete && (
                     <> - Congratulations! Challenge completed!</>
                   )}
@@ -439,24 +419,18 @@ export default function Statistics() {
               </>
             ) : (
               <>
-                {/* If the challenge is unlocked, show progress or completion */}
                 {selectedChallenge.progress >= selectedChallenge.goal ? (
                   <p>Congrats! You’ve completed this challenge!</p>
                 ) : (
                   <>
                     <p>
-                      Progress: {selectedChallenge.progress} /{" "}
-                      {selectedChallenge.goal}
+                      Progress: {selectedChallenge.progress} / {selectedChallenge.goal}
                     </p>
                     <div className="progress-bar-container">
                       <div
                         className="progress-bar-fill"
                         style={{
-                          width: `${
-                            (selectedChallenge.progress /
-                              selectedChallenge.goal) *
-                            100
-                          }%`,
+                          width: `${(selectedChallenge.progress / selectedChallenge.goal) * 100}%`,
                         }}
                       ></div>
                     </div>
