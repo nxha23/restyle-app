@@ -17,23 +17,27 @@ export default function Statistics() {
   const token = localStorage.getItem("accessToken");
 
   // Retrieve currentUser from localStorage (assumes it's stored as JSON)
-  const storedUser = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")) : null;
+  const storedUser = localStorage.getItem("currentUser")
+    ? JSON.parse(localStorage.getItem("currentUser"))
+    : null;
   // Helper: user-specific cache keys
   const statsCacheKey = storedUser ? `stats-${storedUser._id}` : "stats";
-  const sustainabilityCacheKey = storedUser ? `sustainability-${storedUser._id}` : "sustainability";
+  const sustainabilityCacheKey = storedUser
+    ? `sustainability-${storedUser._id}`
+    : "sustainability";
 
   const carbonFootprintMap = {
-    top:       { co2:  5,  water: 2700 },
-    hoodie:    { co2:  8,  water: 3000 },
-    jumper:    { co2: 10,  water: 1000 },
-    trousers:  { co2: 15,  water: 2000 },
-    jeans:     { co2: 20,  water: 3800 },
-    shorts:    { co2:  8,  water: 1500 },
-    skirt:     { co2: 10,  water: 2000 },
-    dress:     { co2: 15,  water: 3000 },
-    jacket:    { co2: 20,  water: 1000 },
-    shoes:     { co2: 14,  water: 8000 },
-    average:   { co2: 12,  water: 1000 },
+    top: { co2: 5, water: 2700 },
+    hoodie: { co2: 8, water: 3000 },
+    jumper: { co2: 10, water: 1000 },
+    trousers: { co2: 15, water: 2000 },
+    jeans: { co2: 20, water: 3800 },
+    shorts: { co2: 8, water: 1500 },
+    skirt: { co2: 10, water: 2000 },
+    dress: { co2: 15, water: 3000 },
+    jacket: { co2: 20, water: 1000 },
+    shoes: { co2: 14, water: 8000 },
+    average: { co2: 12, water: 1000 },
   };
 
   useEffect(() => {
@@ -47,7 +51,9 @@ export default function Statistics() {
         if (cachedStats) {
           setStats(cachedStats);
         }
-        const cachedSustainability = await localforage.getItem(sustainabilityCacheKey);
+        const cachedSustainability = await localforage.getItem(
+          sustainabilityCacheKey
+        );
         if (cachedSustainability) {
           setSustainability(cachedSustainability);
         }
@@ -88,8 +94,12 @@ export default function Statistics() {
         if (!data.success) {
           setError(data.message);
         } else {
-          const sortedLeast = (data.leastWorn || []).sort((a, b) => a.wearCount - b.wearCount);
-          const sortedMost = (data.mostWorn || []).sort((a, b) => b.wearCount - a.wearCount);
+          const sortedLeast = (data.leastWorn || []).sort(
+            (a, b) => a.wearCount - b.wearCount
+          );
+          const sortedMost = (data.mostWorn || []).sort(
+            (a, b) => b.wearCount - a.wearCount
+          );
           const newStats = {
             mostWorn: sortedMost,
             leastWorn: sortedLeast,
@@ -117,7 +127,9 @@ export default function Statistics() {
         let totalCO2 = 0;
         let totalWater = 0;
         allItems.forEach((item) => {
-          const cat = item.itemCategory ? item.itemCategory.toLowerCase() : "average";
+          const cat = item.itemCategory
+            ? item.itemCategory.toLowerCase()
+            : "average";
           const { co2, water } = carbonFootprintMap[cat] || carbonFootprintMap["average"];
           const rewears = Math.max(0, item.wearCount - 1);
           totalCO2 += co2 * rewears;
@@ -172,7 +184,9 @@ export default function Statistics() {
             ch._id === selectedChallenge._id ? { ...ch, locked: false } : ch
           )
         );
-        setSelectedChallenge((prev) => (prev ? { ...prev, locked: false } : prev));
+        setSelectedChallenge((prev) =>
+          prev ? { ...prev, locked: false } : prev
+        );
       } else {
         console.error("Unlock failed:", data.message);
       }
@@ -182,7 +196,10 @@ export default function Statistics() {
   };
   const handleLogProgress = async () => {
     if (!selectedChallenge) return;
-    const newProgress = Math.min(selectedChallenge.progress + 1, selectedChallenge.goal);
+    const newProgress = Math.min(
+      selectedChallenge.progress + 1,
+      selectedChallenge.goal
+    );
     try {
       const res = await fetch(`/api/challenge/update/${selectedChallenge._id}`, {
         method: "POST",
@@ -196,10 +213,14 @@ export default function Statistics() {
       if (data.success) {
         setChallenges((prev) =>
           prev.map((ch) =>
-            ch._id === selectedChallenge._id ? { ...ch, progress: newProgress } : ch
+            ch._id === selectedChallenge._id
+              ? { ...ch, progress: newProgress }
+              : ch
           )
         );
-        setSelectedChallenge((prev) => (prev ? { ...prev, progress: newProgress } : prev));
+        setSelectedChallenge((prev) =>
+          prev ? { ...prev, progress: newProgress } : prev
+        );
       } else {
         console.error("Log progress failed:", data.message);
       }
@@ -223,10 +244,14 @@ export default function Statistics() {
       if (data.success) {
         setChallenges((prev) =>
           prev.map((ch) =>
-            ch._id === selectedChallenge._id ? { ...ch, progress: newProgress } : ch
+            ch._id === selectedChallenge._id
+              ? { ...ch, progress: newProgress }
+              : ch
           )
         );
-        setSelectedChallenge((prev) => (prev ? { ...prev, progress: newProgress } : prev));
+        setSelectedChallenge((prev) =>
+          prev ? { ...prev, progress: newProgress } : prev
+        );
       } else {
         console.error("Unlog day failed:", data.message);
       }
@@ -242,6 +267,11 @@ export default function Statistics() {
   return (
     <div className="statistics-page">
       {error && <p className="error-message">{error}</p>}
+
+      {/* New text providing context */}
+      <h2 className="stats-intro">
+        Every rewear counts. Here's your contribution to reducing fashion’s footprint:
+      </h2>
 
       {/* Top row: CO₂, Water, and Current Streak */}
       <div className="stats-overview">
@@ -364,7 +394,9 @@ export default function Statistics() {
           <h2>C H A L L E N G E S</h2>
           <ul>
             {challenges.map((challenge) => {
-              const percentage = Math.round((challenge.progress / challenge.goal) * 100);
+              const percentage = Math.round(
+                (challenge.progress / challenge.goal) * 100
+              );
               const isComplete = percentage >= 100;
               return (
                 <li
@@ -424,13 +456,18 @@ export default function Statistics() {
                 ) : (
                   <>
                     <p>
-                      Progress: {selectedChallenge.progress} / {selectedChallenge.goal}
+                      Progress: {selectedChallenge.progress} /{" "}
+                      {selectedChallenge.goal}
                     </p>
                     <div className="progress-bar-container">
                       <div
                         className="progress-bar-fill"
                         style={{
-                          width: `${(selectedChallenge.progress / selectedChallenge.goal) * 100}%`,
+                          width: `${
+                            (selectedChallenge.progress /
+                              selectedChallenge.goal) *
+                            100
+                          }%`,
                         }}
                       ></div>
                     </div>
