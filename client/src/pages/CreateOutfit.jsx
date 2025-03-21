@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import domtoimage from "dom-to-image";
 import DraggableItem from "./DraggableItem";
 
-// Import your CSS
 import "../styles/CreateOutfit.css";
 
 const CreateOutfit = () => {
@@ -96,12 +95,16 @@ const CreateOutfit = () => {
       // Wait for the DOM to update
       await new Promise((resolve) => setTimeout(resolve, 0));
       const node = outfitCanvasRef.current;
-      const dataUrl = await domtoimage.toPng(node);
+
+      // Use nested calls to toPng (Safari workaround + keep transparency)
+      await domtoimage.toPng(node, { bgcolor: "transparent" });
+      await domtoimage.toPng(node, { bgcolor: "transparent" });
+      const imgDataUrl = await domtoimage.toPng(node, { bgcolor: "transparent" });
 
       // Restore remove buttons
       setHideRemoveButtons(false);
 
-      // Only send wardrobeItemId, x, and y. The imageUrl is not duplicated here.
+      // Prepare clothing items data (only sending wardrobeItemId, x, and y)
       const clothingItemsData = selectedItems.map((item) => ({
         wardrobeItemId: item._id,
         x: item.x,
@@ -116,7 +119,7 @@ const CreateOutfit = () => {
         },
         body: JSON.stringify({
           clothingItems: clothingItemsData,
-          screenshot: dataUrl,
+          screenshot: imgDataUrl,
         }),
       });
 
@@ -184,7 +187,6 @@ const CreateOutfit = () => {
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
               hideRemoveButtons={hideRemoveButtons}
-              // Pass the container ref to DraggableItem
               containerRef={outfitCanvasRef}
             />
           ))}

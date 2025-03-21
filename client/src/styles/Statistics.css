@@ -47,8 +47,8 @@
 /* Row for Most Worn & Least Worn side by side */
 .worn-section-row {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Each .worn-card is a "card" for Most or Least Worn */
@@ -70,7 +70,7 @@
 .most-worn-container {
   position: relative;
   width: 780px;
-  height: 400px; /* you can adjust as desired */
+  height: 300px; /* you can adjust as desired */
 }
 
 .most-worn-card {
@@ -111,6 +111,7 @@
   width: 780px;
   height: 300px;
   margin: 0 auto;
+  margin-bottom: 1rem;
 }
 .least-worn-card {
   position: absolute;
