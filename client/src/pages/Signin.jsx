@@ -16,7 +16,6 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with:', formData); // Debugging output
     dispatch(signInStart());
 
     // Determine if the identifier is an email or username
@@ -36,7 +35,6 @@ export default function SignIn() {
         credentials: 'include',
       });
       const data = await res.json();
-      console.log('Response data:', data); // Debugging output
 
       if (!res.ok || data.success === false) {
         dispatch(signInFailure(data.message || 'Sign in failed'));
