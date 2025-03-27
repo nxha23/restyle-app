@@ -1,9 +1,8 @@
 [
-    {
-      "origin": ["http://localhost:5173"],
-      "method": ["GET", "HEAD"],
-      "responseHeader": ["Content-Type"],
-      "maxAgeSeconds": 3600
-    }
-  ]
-  
+  {
+    "origin": ["https://restyle-app.onrender.com", "http://localhost:5173"],
+    "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"],
+    "maxAgeSeconds": 3600
+  }
+]
