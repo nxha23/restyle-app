@@ -3,6 +3,7 @@ import WardrobeItem from "../models/wardrobeItem.model.js";
 import { createError } from "../utils/error.js";
 import { fetchImageBase64 } from "../utils/fetchImageBase64.js";
 import { removeImageBackground } from "../utils/removeBg.js";
+import { uploadImageToFirebase } from "../utils/firebaseUploader.js"; // NEW: import Firebase uploader
 
 // CREATE (Add) a new wardrobe item
 export const addWardrobeItem = async (req, res, next) => {
@@ -37,14 +38,18 @@ export const addWardrobeItem = async (req, res, next) => {
       finalDataUri = `data:image/png;base64,${cleanedRawBase64}`;
     }
 
-    // 4) Create & store in DB (including customCategory if provided)
+    // 4) Upload the cleaned image to Firebase and get its public URL
+    const firebasePath = `wardrobe/${Date.now()}_${req.user.id}.png`;
+    const publicImageUrl = await uploadImageToFirebase(finalDataUri, firebasePath);
+
+    // 5) Create & store in DB using the public image URL
     const newItem = await WardrobeItem.create({
       itemCategory,
       customCategory: customCategory || "", // fallback to empty string
       brand,
       size,
       datePurchased,
-      imageUrl: finalDataUri, // store the background-removed image
+      imageUrl: publicImageUrl, // now storing the public URL
       userRef: req.user.id,
       wearCount: 0,
     });
@@ -131,7 +136,14 @@ export const getWardrobeItems = async (req, res, next) => {
         message: "User authentication failed",
       });
     }
+
     const items = await WardrobeItem.find({ userRef: req.user.id });
+
+    // ✅ Log image sizes
+    items.forEach((item, i) => {
+      console.log(`Item #${i} image length: ${item.imageUrl?.length || 0}`);
+    });
+
     return res.status(200).json({
       success: true,
       items,
