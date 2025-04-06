@@ -90,7 +90,7 @@ export default function AddWardrobeItem() {
     }
   };
 
-  // Update form fields (for brand, size, datePurchased, customCategory, etc.)
+  // Update form fields
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -98,7 +98,7 @@ export default function AddWardrobeItem() {
     }));
   };
 
-  // Special handler for the itemCategory dropdown
+
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setFormData((prev) => ({
@@ -118,7 +118,7 @@ export default function AddWardrobeItem() {
       setError("❌ Item Category is required.");
       return;
     }
-    // If user picks "other," customCategory must not be empty
+    // If user picks "other" customCategory must not be empty
     if (formData.itemCategory === "other" && !formData.customCategory.trim()) {
       setError("❌ Please specify a category when selecting 'other'.");
       return;
@@ -160,7 +160,7 @@ export default function AddWardrobeItem() {
 
       console.log("✅ Wardrobe item added:", data.wardrobeItem);
 
-      // Update localForage cache instead of localStorage
+  
       const cachedItems = (await localforage.getItem("wardrobeItems")) || [];
       const updatedItems = [...cachedItems, data.wardrobeItem];
       await localforage.setItem("wardrobeItems", updatedItems);

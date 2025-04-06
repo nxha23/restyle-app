@@ -1,45 +1,39 @@
-/* ============ Header.css ============ */
+/*  Header.css  */
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Outfit:wght@100..900&display=swap');
 
-/* 1) The <header> itself: floating, rounded, semi-transparent background */
+
 .header {
-    /* "Floating" near the top */
     position: relative;
-    margin: 2rem auto;       /* space from top, horizontally centered */
-    width: 90%;             /* occupy 90% of screen width */
-    max-width: 1200px;      /* optionally cap at 1200px, adjust to taste */
+    margin: 2rem auto;       
+    width: 90%;             
+    max-width: 1200px;      
   
-    /* Appearance: 
-       #ffffff12 is a hex + alpha color => ~7% opacity white
-    */
+  
     background-color: #ffffff12;
     border: 1px solid #ffffff12; 
     border-radius: 1rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* "floating" effect */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
   
-    /* Some padding for content */
+ 
     padding: 1rem 2rem;
   
-    /* Ensure it's on top of other content if needed */
+
     z-index: 50;
   
-    /* If you want a minimum height (like Figma’s 132px), uncomment:
-       min-height: 132px;
-    */
   }
   
-  /* 2) The container inside the header for layout */
+  /* The container inside the header for layout */
   .header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
   
-  /* 3) Brand link (ReStyle) */
+  /*  ReStyle */
   .header-brand {
     font-family: "Lato", sans-serif;
-    font-size: 1.5rem;  /* adjust as needed for smaller/larger text */
+    font-size: 1.5rem;  
     font-weight: 700;
     color: #ffffff;
     text-decoration: none;
@@ -49,10 +43,10 @@
     opacity: 0.9;
   }
   
-  /* 4) The nav container in the middle */
+  /*  The nav container in the middle */
   .header-nav {
     display: flex;
-    gap: 2rem; /* spacing between nav links */
+    gap: 2rem; 
   }
   
   .header-nav a {
@@ -65,10 +59,10 @@
   }
   
   .header-nav a:hover {
-    color: #f06292; /* pinkish hover color */
+    color: #f06292; 
   }
   
-  /* 5) Profile link (if user is logged in) */
+  /*  Profile link (if user is logged in) */
   .header-profile {
     display: flex;
     align-items: center;
@@ -91,7 +85,7 @@
     color: #f06292;
   }
   
-  /* 6) The login/sign-up container (if user not logged in) */
+  /*  The login/sign-up container (if user not logged in) */
   .header-login-signup {
     display: flex;
     align-items: center;

@@ -22,7 +22,7 @@
   font-weight: 500;
 }
 
-/* Stats Overview (top row with CO₂, water, streak) */
+/* Stats Overview  */
 .stats-overview {
   display: flex;
   gap: 2rem;
@@ -46,11 +46,11 @@
   font-weight: bold;
 }
 
-/* MAIN CONTENT WRAPPER */
+
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem; /* gap between worn-section-row and challenges */
+  gap: 2rem; 
 }
 
 /* Row for Most Worn & Least Worn side by side */
@@ -60,12 +60,12 @@
   align-items: center;
 }
 
-/* Each .worn-card is a "card" for Most or Least Worn */
+
 .worn-card {
   padding: 1.5rem;
   border-radius: 10px;
   text-align: center;
-  background-color: transparent; /* or a translucent background if you want */
+  background-color: transparent; 
 }
 
 /* Headings for worn sections */
@@ -75,11 +75,10 @@
   margin-bottom: 1rem;
 }
 
-/* Most Worn container with smaller height & offsets */
 .most-worn-container {
   position: relative;
   width: 780px;
-  height: 300px; /* Adjust as needed */
+  height: 300px; 
 }
 
 .most-worn-card {
@@ -131,14 +130,14 @@
   align-items: center;
   justify-content: center;
 }
-/* left => index [1] */
+
 .left-least-worn {
   width: 210px;
   height: 290px;
   top: 40px;
   left: 40px;
 }
-/* center => index [0] */
+
 .top-least-worn {
   width: 210px;
   height: 290px;
@@ -146,7 +145,7 @@
   left: 50%;
   transform: translateX(-50%);
 }
-/* right => index [2] */
+
 .right-least-worn {
   width: 210px;
   height: 290px;
@@ -163,14 +162,13 @@
   margin-bottom: 0.5rem;
 }
 
-/* The "X wears" text */
 .wear-count-text {
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
 }
 
-/* Challenges Section (below worn row) */
+/* Challenges Section  */
 .challenges-section {
   padding: 1.5rem;
   border-radius: 10px;
@@ -200,7 +198,6 @@
   vertical-align: middle;
 }
 
-/* Make challenge name bold */
 .challenge-name {
   font-weight: 650;
 }

@@ -7,14 +7,14 @@
   min-height: 80vh;
   font-family: "Lato", sans-serif;
   color: #fff;
-  /* Removed the solid grey background so the underlying gradient shows through */
+
   background: transparent;
 }
 
 .auth-container {
-  background-color: rgba(71, 69, 69, 0.5); /* semi-transparent background similar to Add Wardrobe */
+  background-color: rgba(71, 69, 69, 0.5); 
   border-radius: 20px;
-  width: 600px; /* Reduced width to match your other pages */
+  width: 600px; 
   padding: 2rem;
 }
 

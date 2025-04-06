@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// Import your logout action from Redux actions
 import { logoutUser } from "../redux/actions";
 
 export default function Logout() {
@@ -18,7 +17,6 @@ export default function Logout() {
     // Remove the access token
     localStorage.removeItem("accessToken");
 
-    // Dispatch the logout action to clear Redux state
     dispatch(logoutUser());
 
     // Redirect to the login page

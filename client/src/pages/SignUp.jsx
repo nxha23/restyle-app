@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { signInStart, signInFailure, signUpSuccess } from "../redux/user/userSlice";
-import "../styles/Auth.css"; // Import the updated auth CSS
+import "../styles/Auth.css"; 
 
 export default function SignUp() {
   const dispatch = useDispatch();

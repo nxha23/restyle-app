@@ -1,7 +1,7 @@
 // api/routes/wardrobe.route.js
 import express from "express";
 import {
-  addWardrobeItem, // ← Changed from createWardrobeItem to addWardrobeItem
+  addWardrobeItem, 
   deleteWardrobeItem,
   updateWardrobeItem,
   getWardrobeItem,
@@ -12,7 +12,7 @@ import { verifyToken } from "../utils/verifyUser.js";
 
 const router = express.Router();
 
-// Use addWardrobeItem in your creation route
+
 router.post("/create", verifyToken, addWardrobeItem);
 router.delete("/delete/:id", verifyToken, deleteWardrobeItem);
 router.post("/update/:id", verifyToken, updateWardrobeItem);

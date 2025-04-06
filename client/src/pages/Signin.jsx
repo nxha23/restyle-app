@@ -18,7 +18,7 @@ export default function SignIn() {
     e.preventDefault();
     dispatch(signInStart());
 
-    // Determine if the identifier is an email or username
+
     const isEmail = formData.identifier.includes('@');
     const payload = { password: formData.password };
     if (isEmail) {

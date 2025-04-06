@@ -2,11 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@100..900&family=Outfit:wght@100..900&display=swap');
 
 html, body {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none; 
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;        /* Chrome, Safari, Opera */
+  display: none;        
 }
 
 .wardrobe-page {
@@ -26,7 +26,7 @@ body::-webkit-scrollbar {
 /* Wardrobe & Outfits sections */
 .wardrobe-section,
 .outfits-section {
-  margin-bottom: 2rem; /* tighten spacing */
+  margin-bottom: 2rem; 
 }
 
 .section-header {
@@ -42,7 +42,7 @@ body::-webkit-scrollbar {
   font-size: 1.5rem;
 }
 
-/* Scroll arrow buttons */
+
 .arrow-buttons {
   display: flex;
   gap: 0.5rem;
@@ -57,29 +57,23 @@ body::-webkit-scrollbar {
   cursor: pointer;
 }
 
-/* 
-   Horizontal scroll container
-   We use center alignment so items are centered in their own cards
-*/
+
 .wardrobe-grid {
   display: flex;
   flex-wrap: nowrap;
-  align-items: center;  /* center them vertically within the container */
+  align-items: center;  
   gap: 1.5rem;
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: 1rem;
-  -ms-overflow-style: none; /* IE/Edge hide scrollbar */
-  scrollbar-width: none;    /* Firefox hide scrollbar */
+  -ms-overflow-style: none; 
+  scrollbar-width: none;   
 }
 .wardrobe-grid::-webkit-scrollbar {
-  display: none; /* Chrome/Safari hide scrollbar */
+  display: none; 
 }
 
-/* 
-   Wardrobe card 
-   246 wide x 297 tall 
-*/
+
 .wardrobe-card {
   flex: 0 0 246px;
   height: 297px;
@@ -89,7 +83,7 @@ body::-webkit-scrollbar {
   position: relative;
   cursor: pointer;
   display: flex;
-  align-items: center;     /* center image inside the card */
+  align-items: center;    
   justify-content: center;
   transition: transform 0.2s ease-in-out;
 }
@@ -97,11 +91,7 @@ body::-webkit-scrollbar {
   transform: scale(1.02);
 }
 
-/*
-   Outfit card
-   (same size as wardrobe here; if you want bigger,
-    just change these dimensions)
-*/
+
 .outfit-card {
   flex: 0 0 246px;
   height: 297px;
@@ -119,7 +109,6 @@ body::-webkit-scrollbar {
   transform: scale(1.02);
 }
 
-/* Images fill the card but maintain aspect ratio */
 .wardrobe-card img,
 .outfit-card img {
   width: 90%;
@@ -128,7 +117,6 @@ body::-webkit-scrollbar {
   object-position: center;
 }
 
-/* If an outfit is missing a screenshot, show a placeholder */
 .no-screenshot {
   width: 100%;
   height: 100%;
@@ -139,7 +127,6 @@ body::-webkit-scrollbar {
   font-size: 0.9rem;
 }
 
-/* “+” Add Item / Create Outfit card */
 .add-card::before {
   content: "+";
   font-size: 3rem;
@@ -147,7 +134,6 @@ body::-webkit-scrollbar {
   font-weight: bold;
 }
 
-/* Optional small 'delete' button inside a card (if you want) */
 .delete-button {
   position: absolute;
   top: 0.5rem;

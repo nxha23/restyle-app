@@ -55,18 +55,18 @@
   padding: 1rem;
   width: 100%;
 
-  /* Slightly transparent background behind the items */
+
   border-radius: 1rem;
   margin-bottom: 2rem;
 }
 
-/* Hide the scrollbar in all major browsers */
+
 .top-wardrobe-items::-webkit-scrollbar {
   display: none;
 }
 .top-wardrobe-items {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;  
+  scrollbar-width: none;     
 }
 
 /* Each wardrobe item in the horizontal list */
@@ -86,7 +86,7 @@
   transform: scale(1.05);
 }
 
-/* Thumbnail image for each wardrobe item */
+/*  image for each wardrobe item */
 .wardrobe-item-img {
   width: 60px;
   height: 60px;
@@ -94,7 +94,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* Container for the outfit canvas, with a semi-transparent background */
+/* Container for the outfit canvas*/
 .outfit-canvas-container {
   position: relative;
   width: 80%;

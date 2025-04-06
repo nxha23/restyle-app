@@ -1,4 +1,4 @@
-/* ============ Background.css ============ */
+/*  Background.css  */
 
 /* Container behind all content */
 .bg-container {
@@ -8,7 +8,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: -1; /* So content is on top */
+    z-index: -1;
   }
   
   /* Shared shape styles */
@@ -22,21 +22,18 @@
     opacity: 0.2;
   }
   
-  /* ====================== 
-     SHAPE #4 (Dark top) 
-     #0A0C10
-  ====================== */
+  
   .bg-shape4 {
-    /* Slightly larger so it covers top area well */
+
     width: 600px;
     height: 600px;
   
-    /* Place it near the top, horizontally centered */
+  
     top: 13%;
     left: 20%;
   
     background-color: #0A0C10; 
-    opacity: 0.3; /* More visible than the others */
+    opacity: 0.3; 
 
   }
   

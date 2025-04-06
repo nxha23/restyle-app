@@ -20,17 +20,15 @@ import CreateOutfit from "./pages/CreateOutfit";
 import Profile from "./pages/Profile";
 import AddWardrobeItem from "./pages/AddWardrobeItem";
 import CalendarPage from "./pages/CalendarPage"; 
-import Statistics from "./pages/Statistics"; // Example extra page
+import Statistics from "./pages/Statistics"; 
 
 export default function App() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const isRehydrated = useSelector((state) => state._persist?.rehydrated);
 
-  // Track Firebase readiness
   const [authInitialized, setAuthInitialized] = useState(false);
 
-  // Listen for Firebase auth changes once
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -52,7 +50,6 @@ export default function App() {
     return () => unsubscribe();
   }, [dispatch]);
 
-  // If Redux Persist or Firebase auth isn’t ready, show loading
   if (!isRehydrated || !authInitialized) {
     return <div>Loading...</div>;
   }
@@ -131,7 +128,7 @@ export default function App() {
           }
         />
 
-        {/* Catch-all: redirect to home */}
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -15,7 +15,7 @@
     text-align: center;
   }
   
-  /* TOP ROW: Nudge and Streaks */
+  /*  Nudge and Streaks */
   .top-row {
     display: flex;
     justify-content: space-between;
@@ -23,15 +23,12 @@
     margin-bottom: 2rem;
   }
   
-  /* 
-     .left-col: now has a translucent background box 
-     similar to .right-col (streaks-section).
-  */
+
   .left-col {
     flex: 2;
-    background-color: rgba(255, 255, 255, 0.05); /* ADDED */
-    border-radius: 10px;                         /* ADDED */
-    padding: 1.5rem;                             /* ADDED */
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;                         
+    padding: 1.5rem;                             
   }
   
   /* Right column: Streaks box */
@@ -79,7 +76,7 @@
     color: #bbb;
   }
   
-  /* TOMORROW ROW: Outfit for Tomorrow and Weather */
+  /*  Outfit for Tomorrow and Weather */
   .tomorrow-row {
     display: flex;
     gap: 2rem;
@@ -154,11 +151,7 @@
     margin-bottom: 0.5rem;
   }
   
-  /* 
-     Ongoing Challenges Section 
-     - Now we ensure .challenges-heading is bigger 
-     - Use !important if something else overrides it
-  */
+
   .challenges-section {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 1.5rem;
@@ -167,7 +160,7 @@
   }
   
   .challenges-heading {
-    font-size: 1.5rem !important;  /* Increased & !important to override */
+    font-size: 1.5rem !important;  
     font-weight: 700;
     margin-bottom: 1rem;
     text-align: center;

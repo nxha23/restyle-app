@@ -2,10 +2,10 @@
 import mongoose from "mongoose";
 
 const OutfitItemSchema = new mongoose.Schema({
-  // Reference to the WardrobeItem document
+
   wardrobeItemId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "WardrobeItem", // Must match the model name from wardrobeItem.model.js
+    ref: "WardrobeItem", 
     required: true,
   },
   // Coordinates on the outfit canvas
@@ -23,7 +23,7 @@ const outfitSchema = new mongoose.Schema(
     },
     // Array of clothing item references + their positions
     clothingItems: [OutfitItemSchema],
-    // The single, merged screenshot (base64 string) of the outfit layout
+    // The single, merged screenshot of the outfit layout
     screenshot: { type: String },
   },
   { timestamps: true }

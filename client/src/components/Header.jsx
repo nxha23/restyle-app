@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        {/* Left: Brand */}
+        {/* Left: restyle */}
         <Link to="/" className="header-brand">
           ReStyle
         </Link>
@@ -23,7 +23,7 @@ export default function Header() {
           <Link to="/statistics">Statistics</Link>
         </nav>
 
-        {/* Right: Profile (if logged in) or Login/Sign Up */}
+        {/* Right: Profile or Login/Sign Up */}
         {currentUser ? (
           <Link to="/profile" className="header-profile">
             <img

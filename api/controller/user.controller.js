@@ -84,7 +84,6 @@ export const getUser = async (req, res, next) => {
   }
 };
 
-// If you want "getUserWardrobeItems"
 import WardrobeItem from '../models/wardrobeItem.model.js';
 
 export const getUserWardrobeItems = async (req, res, next) => {

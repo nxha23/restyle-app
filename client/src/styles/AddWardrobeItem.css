@@ -9,9 +9,9 @@
   color: #fff;
 }
 
-/* Main container with 50% #474545 background */
+
 .add-wardrobe-container {
-  background-color: rgba(71, 69, 69, 0.5); /* 50% #474545 */
+  background-color: rgba(71, 69, 69, 0.5); 
   border-radius: 20px;
   width: 1000px; 
   padding: 2rem;
@@ -40,7 +40,7 @@
 
 .form-row {
   display: flex;
-  flex-wrap: wrap; /* so it can wrap on smaller screens if needed */
+  flex-wrap: wrap; 
   gap: 1rem;
 }
 
@@ -62,7 +62,7 @@
   min-width: 250px;
 }
 
-/* Input fields (text, date, file, and select) */
+/* Input fields  */
 .add-wardrobe-form input[type="text"],
 .add-wardrobe-form input[type="date"],
 .add-wardrobe-form input[type="file"],
@@ -99,7 +99,7 @@
   align-items: center;
 }
 
-/* The preview area after a successful upload */
+
 .upload-preview {
   margin-top: 1rem;
 }
@@ -108,7 +108,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* The uploaded image thumbnail */
 .uploaded-image {
   width: 8rem;
   height: 8rem;

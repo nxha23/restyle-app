@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Try to load user and token from localStorage
 const storedUser = JSON.parse(localStorage.getItem("currentUser"));
 const storedToken = localStorage.getItem("accessToken");
 
 const initialState = {
-  // Use undefined if nothing stored to indicate auth not yet determined
   currentUser: storedUser === null ? undefined : storedUser,
   accessToken: storedToken || undefined,
   error: null,
@@ -22,7 +20,7 @@ const userSlice = createSlice({
       state.error = null;
     },
     signInSuccess: (state, action) => {
-      // Expect payload: { user: {...}, token: "..." }
+
       state.currentUser = action.payload.user;
       state.accessToken = action.payload.token;
       state.loading = false;
@@ -43,7 +41,7 @@ const userSlice = createSlice({
       localStorage.setItem("currentUser", JSON.stringify(action.payload.user));
       localStorage.setItem("accessToken", action.payload.token);
     },
-    // For Firebase Auth changes (onAuthStateChanged)
+
     loginSuccess: (state, action) => {
       state.currentUser = action.payload.user;
       state.accessToken = action.payload.token;

@@ -4,10 +4,10 @@ import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router();
 
-// GET /api/streak - Returns the user's current streak and last streak date.
+// GET /api/streak 
 router.get("/", verifyToken, getStreak);
 
-// POST /api/streak/confirm - Confirms today's outfit and updates the user's streak.
+// POST /api/streak/confirm
 router.post("/confirm", verifyToken, confirmStreak);
 
 export default router;

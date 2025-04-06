@@ -35,7 +35,7 @@ export const updateChallenge = async (req, res, next) => {
     if (req.user.id !== challenge.userRef.toString()) {
       return next(createError(401, "You can only update your own challenge!"));
     }
-    // Update with the request body (could include progress, locked, etc.)
+    // Update with the request body 
     const updatedChallenge = await Challenge.findByIdAndUpdate(
       req.params.id,
       req.body,

@@ -7,7 +7,7 @@ const DailyOutfitSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  // The date for which the user picks an outfit (just store year/month/day)
+  // The date for which the user picks an outfit
   date: { type: Date, required: true },
   // The chosen outfit
   outfitRef: {

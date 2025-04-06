@@ -3,14 +3,14 @@ import WardrobeItem from "../models/wardrobeItem.model.js";
 import { createError } from "../utils/error.js";
 import { fetchImageBase64 } from "../utils/fetchImageBase64.js";
 import { removeImageBackground } from "../utils/removeBg.js";
-import { uploadImageToFirebase } from "../utils/firebaseUploader.js"; // NEW: import Firebase uploader
+import { uploadImageToFirebase } from "../utils/firebaseUploader.js"; 
 
 // CREATE (Add) a new wardrobe item
 export const addWardrobeItem = async (req, res, next) => {
   try {
     const { itemCategory, customCategory, brand, size, datePurchased, imageUrl } = req.body;
 
-    // Basic validations
+
     if (!itemCategory || !imageUrl) {
       return res.status(400).json({
         success: false,
@@ -45,11 +45,11 @@ export const addWardrobeItem = async (req, res, next) => {
     // 5) Create & store in DB using the public image URL
     const newItem = await WardrobeItem.create({
       itemCategory,
-      customCategory: customCategory || "", // fallback to empty string
+      customCategory: customCategory || "", 
       brand,
       size,
       datePurchased,
-      imageUrl: publicImageUrl, // now storing the public URL
+      imageUrl: publicImageUrl, 
       userRef: req.user.id,
       wearCount: 0,
     });
@@ -93,10 +93,9 @@ export const updateWardrobeItem = async (req, res, next) => {
     if (item.userRef.toString() !== req.user.id) {
       return next(createError(403, "You can only update your own items!"));
     }
-    // For simplicity, we update using the request body directly.
     const updatedItem = await WardrobeItem.findByIdAndUpdate(
       req.params.id,
-      req.body, // includes itemCategory, customCategory, brand, size, etc.
+      req.body, 
       { new: true }
     );
     return res.status(200).json({
@@ -139,7 +138,7 @@ export const getWardrobeItems = async (req, res, next) => {
 
     const items = await WardrobeItem.find({ userRef: req.user.id });
 
-    // ✅ Log image sizes
+    // Log image sizes
     items.forEach((item, i) => {
       console.log(`Item #${i} image length: ${item.imageUrl?.length || 0}`);
     });

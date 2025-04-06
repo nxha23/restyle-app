@@ -9,7 +9,6 @@ export const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-  // Verify token (Firebase or custom)
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return next(createError(403, "Forbidden: Invalid token"));
     req.user = user;

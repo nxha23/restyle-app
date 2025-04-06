@@ -14,10 +14,6 @@ function isConsecutiveDay(dateA, dateB) {
   return dayB - dayA === oneDayMs;
 }
 
-/**
- * GET /api/streak
- * Returns the current user's streak count and last streak confirmation date.
- */
 export const getStreak = async (req, res) => {
   try {
     // Use req.user.id as set in your verifyToken middleware
@@ -40,14 +36,6 @@ export const getStreak = async (req, res) => {
   }
 };
 
-/**
- * POST /api/streak/confirm
- * Confirms today's outfit and updates the user's streak.
- * The logic checks if a daily outfit exists for today. If found:
- *   - If no previous confirmation exists, it starts the streak at 1.
- *   - If the last confirmation was yesterday, it increments the streak.
- *   - Otherwise, it resets the streak to 1.
- */
 export const confirmStreak = async (req, res) => {
   try {
     // Use req.user.id to find the user
@@ -64,7 +52,7 @@ export const confirmStreak = async (req, res) => {
 
     // Check that a daily outfit exists for today.
     const dailyOutfit = await DailyOutfit.findOne({
-      userId: user._id, // Mongoose will cast user._id properly
+      userId: user._id, 
       date: dateStr,
     });
     if (!dailyOutfit) {

@@ -1,8 +1,8 @@
 // src/pages/Home.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import localforage from "localforage"; // Added for caching
-import "../styles/Home.css"; // Our custom CSS
+import localforage from "localforage"; 
+import "../styles/Home.css"; 
 
 export default function Home() {
   const [nudge, setNudge] = useState("");
@@ -18,14 +18,12 @@ export default function Home() {
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
 
-  // Retrieve currentUser from localStorage (assumes it's stored as JSON)
+ 
   const storedUser = localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")) : null;
 
-  // Helper: Build user-specific cache key
   const getCacheKey = (baseKey) =>
     storedUser ? `${baseKey}-${storedUser._id}` : baseKey;
 
-  // Use Vite's environment variable:
   const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
   useEffect(() => {
@@ -34,7 +32,7 @@ export default function Home() {
       return;
     }
 
-    // 1) Fetch daily nudge (AI tip)
+    // Fetch daily nudge
     fetch("/api/nudge", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => {
@@ -46,7 +44,7 @@ export default function Home() {
       })
       .catch((err) => setError(err.message));
 
-    // 2) Fetch challenges (unlocked only)
+    // Fetch challenges (unlocked only)
     fetch("/api/challenge/all", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => {
@@ -58,7 +56,7 @@ export default function Home() {
       })
       .catch((err) => setError(err.message));
 
-    // 3) Fetch the streak
+    // Fetch the streak
     fetch("/api/streak", { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => {
@@ -68,19 +66,18 @@ export default function Home() {
       })
       .catch((err) => setError(err.message));
 
-    // 4) Fetch outfit for tomorrow with localForage caching
+    //Fetch outfit for tomorrow 
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const formattedTomorrow = tomorrow.toISOString().split("T")[0];
     const cacheKey = getCacheKey(`tomorrowOutfit-${formattedTomorrow}`);
     
-    // Load cached outfit first
+   
     localforage.getItem(cacheKey)
       .then((cachedOutfit) => {
         if (cachedOutfit) {
           setTomorrowOutfit(cachedOutfit);
         }
-        // Fetch fresh data in background
         return fetch(`/api/dailyOutfit/get/${formattedTomorrow}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -96,7 +93,7 @@ export default function Home() {
       })
       .catch((err) => setError(err.message));
 
-    // 5) Fetch weather using geolocation
+    //  Fetch weather using geolocation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -136,9 +133,7 @@ export default function Home() {
     }
   }, [token]);
 
-  // -------------------------
-  // Challenge / Modal Logic
-  // -------------------------
+
   const handleChallengeClick = (challenge) => {
     setSelectedChallenge(challenge);
     setShowModal(true);

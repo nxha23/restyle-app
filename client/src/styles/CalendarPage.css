@@ -3,11 +3,11 @@
 html, body {
   margin: 0;
   padding: 0;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none; 
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;         /* Chrome, Safari, Opera */
+  display: none;     
 }
 
 .calendar-page {
@@ -192,7 +192,7 @@ body::-webkit-scrollbar {
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* Disabled state: no pointer events, reduce opacity */
+
 .disabled {
   pointer-events: none;
   opacity: 0.6;

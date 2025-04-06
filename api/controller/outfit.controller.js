@@ -4,9 +4,7 @@ import Outfit from "../models/outfit.model.js";
 import WardrobeItem from "../models/wardrobeItem.model.js";
 import { createError } from "../utils/error.js";
 
-/**
- * Create an outfit with clothing items and a screenshot.
- */
+
 export const createOutfit = async (req, res, next) => {
   try {
     const { clothingItems, screenshot } = req.body;
@@ -43,14 +41,10 @@ export const createOutfit = async (req, res, next) => {
     const newOutfit = new Outfit({
       userRef: req.user.id,
       clothingItems: validatedItems,
-      screenshot, // base64 screenshot or URL
+      screenshot,
     });
 
     await newOutfit.save();
-
-    // NOTE: The wearCount increment has been removed here
-    // If you only want wearCount to go up when the outfit is chosen as the daily outfit,
-    // do NOT increment wearCount in createOutfit.
 
     res.status(201).json({
       success: true,
@@ -61,9 +55,7 @@ export const createOutfit = async (req, res, next) => {
   }
 };
 
-/**
- * Fetch all outfits for the logged-in user.
- */
+
 export const getAllOutfits = async (req, res, next) => {
   try {
     if (!req.user || !req.user.id) {
@@ -85,9 +77,7 @@ export const getAllOutfits = async (req, res, next) => {
   }
 };
 
-/**
- * Delete an outfit if the user owns it.
- */
+
 export const deleteOutfit = async (req, res, next) => {
   try {
     const outfit = await Outfit.findById(req.params.id);

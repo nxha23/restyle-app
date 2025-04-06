@@ -9,9 +9,9 @@
   color: #fff;
 }
 
-/* Main container with 50% #474545 background */
+
 .profile-container {
-  background-color: rgba(71, 69, 69, 0.5); /* 50% #474545 */
+  background-color: rgba(71, 69, 69, 0.5);
   border-radius: 20px;
   width: 1000px; 
   height: auto;
@@ -133,7 +133,7 @@
   color: dodgerblue;
 }
 
-/* Mobile Responsiveness */
+
 @media (max-width: 768px) {
   .profile-container {
     width: 90%;
@@ -158,5 +158,5 @@
   }
   
   .profile-actions .sign-out {
-    margin-left: auto; /* Pushes the Sign Out button to the right */
+    margin-left: auto; 
   }

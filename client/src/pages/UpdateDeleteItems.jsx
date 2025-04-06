@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import "../styles/UpdateDeleteItems.css";
 
-// Reuse the same category list
-// Note "Other" is capitalized; we must check for "Other" consistently in the code
 const CATEGORIES = [
   "Top",
   "Hoodie",
@@ -24,7 +22,6 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  // Local edit state includes customCategory
   const [editData, setEditData] = useState({
     itemCategory: item.itemCategory || "",
     customCategory: item.customCategory || "",
@@ -35,7 +32,6 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
       : "",
   });
 
-  // Enter edit mode
   const handleEditClick = () => {
     setIsEditing(true);
   };
@@ -52,13 +48,13 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
       if (!data.success) throw new Error(data.message);
 
       console.log("Item deleted successfully!");
-      onRefresh(); // refresh parent
+      onRefresh(); 
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // Handle changes for brand, size, datePurchased, customCategory, etc.
+  // Handle changes 
   const handleChange = (e) => {
     setEditData((prev) => ({
       ...prev,
@@ -66,13 +62,12 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
     }));
   };
 
-  // Special handler for itemCategory dropdown
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     setEditData((prev) => ({
       ...prev,
       itemCategory: value,
-      // If user picks "Other," keep customCategory; otherwise reset it
+   
       customCategory: value === "Other" ? prev.customCategory : "",
     }));
   };
@@ -92,7 +87,7 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
 
     try {
       const res = await fetch(`/api/wardrobe/update/${item._id}`, {
-        method: "POST", // or "PUT"
+        method: "POST", 
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -113,10 +108,8 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
 
         console.log("Item updated successfully!");
 
-      // Let parent re-fetch if needed
       onRefresh();
 
-      // Switch back to view mode
       setIsEditing(false);
     } catch (err) {
       setError(err.message);
@@ -141,7 +134,7 @@ export default function UpdateDeleteItems({ item, onClose, onRefresh }) {
               className="item-image"
             />
             <h2 className="item-title">
-              {/* If itemCategory is "Other" and there's a customCategory, show "Other: <custom>" */}
+              {/* If itemCategory is "Other" show "Other: <custom>" */}
               {item.itemCategory === "Other" && item.customCategory
                 ? `Other: ${item.customCategory}`
                 : item.itemCategory || "No Category"}

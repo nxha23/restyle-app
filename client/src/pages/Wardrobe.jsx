@@ -24,7 +24,6 @@ export default function Wardrobe() {
 
   const token = localStorage.getItem("accessToken");
 
-  // Helper for user-specific keys
   const getCacheKey = (baseKey) =>
     currentUser ? `${baseKey}-${currentUser._id}` : baseKey;
 
@@ -134,7 +133,7 @@ export default function Wardrobe() {
     <div className="wardrobe-page">
       {error && <p className="error-message">{error}</p>}
 
-      {/* --- WARDROBE SECTION --- */}
+      {/*WARDROBE SECTION*/}
       <div className="wardrobe-section">
         <div className="section-header">
           <h1>Your Wardrobe</h1>
@@ -164,7 +163,7 @@ export default function Wardrobe() {
         </div>
       </div>
 
-      {/* --- OUTFITS SECTION --- */}
+      {/* OUTFITS SECTION */}
       <div className="outfits-section">
         <div className="section-header">
           <h2>Your Outfits</h2>

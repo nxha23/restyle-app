@@ -16,11 +16,9 @@ export default function Statistics() {
   const [streak, setStreak] = useState(0);
   const token = localStorage.getItem("accessToken");
 
-  // Retrieve currentUser from localStorage (assumes it's stored as JSON)
   const storedUser = localStorage.getItem("currentUser")
     ? JSON.parse(localStorage.getItem("currentUser"))
     : null;
-  // Helper: user-specific cache keys
   const statsCacheKey = storedUser ? `stats-${storedUser._id}` : "stats";
   const sustainabilityCacheKey = storedUser
     ? `sustainability-${storedUser._id}`
@@ -161,7 +159,6 @@ export default function Statistics() {
       .catch(console.error);
   };
 
-  // Challenge/Modal logic remains unchanged
   const handleChallengeClick = (challenge) => {
     setSelectedChallenge(challenge);
     setShowModal(true);
@@ -268,7 +265,6 @@ export default function Statistics() {
     <div className="statistics-page">
       {error && <p className="error-message">{error}</p>}
 
-      {/* New text providing context */}
       <h2 className="stats-intro">
         Every rewear counts. Here's your contribution to reducing fashion’s footprint:
       </h2>

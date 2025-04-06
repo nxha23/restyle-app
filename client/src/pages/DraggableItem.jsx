@@ -7,7 +7,6 @@ const DraggableItem = ({
   selectedItems,
   setSelectedItems,
   hideRemoveButtons,
-  // Pass the parent canvas ref here
   containerRef,
 }) => {
   const [position, setPosition] = useState({ x: item.x, y: item.y });
@@ -27,16 +26,13 @@ const DraggableItem = ({
         height: "250px",
       }}
       drag
-      // Use the parent container's ref for drag constraints
       dragConstraints={containerRef}
       dragMomentum={false}
       dragElastic={0.1}
-      // Tiny offset to ensure immediate drag on mousedown
       onMouseDown={(e) => {
         e.preventDefault();
         setPosition((prev) => ({ ...prev, x: prev.x + 0.1, y: prev.y + 0.1 }));
       }}
-      // Update final position in both local state and global selectedItems
       onDragEnd={(_, info) => {
         setPosition({ x: info.point.x, y: info.point.y });
         setSelectedItems((prev) =>
@@ -49,7 +45,6 @@ const DraggableItem = ({
       <img
         src={item.imageUrl}
         alt="Selected Item"
-        // object-contain so tall items (jeans, dresses, etc.) aren’t cropped
         className="w-full h-full object-contain rounded"
       />
       {!hideRemoveButtons && (

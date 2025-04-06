@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import localforage from "localforage";
-import "../styles/CalendarPage.css"; // Ensure this path is correct
+import "../styles/CalendarPage.css"; 
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -13,7 +13,6 @@ const MONTH_NAMES = [
 export default function CalendarPage() {
   const [outfits, setOutfits] = useState([]);
   const [dailyOutfit, setDailyOutfit] = useState(null);
-  // In-memory cache for daily outfits keyed by date string ("YYYY-MM-DD")
   const [dailyOutfitsCache, setDailyOutfitsCache] = useState({});
   const [viewDate, setViewDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
@@ -30,13 +29,10 @@ export default function CalendarPage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
 
-  // Helper: Build a user-specific cache key (if currentUser is available)
   const getCacheKey = (baseKey) =>
     currentUser ? `${baseKey}-${currentUser._id}` : baseKey;
 
-  // -----------------------------------------------------
-  // SCROLL FUNCTIONS FOR OUTFIT LIST
-  // -----------------------------------------------------
+ 
   const scrollLeft = () => {
     outfitListRef.current?.scrollBy({ left: -300, behavior: "smooth" });
   };
@@ -44,9 +40,7 @@ export default function CalendarPage() {
   const scrollRight = () => {
     outfitListRef.current?.scrollBy({ left: 300, behavior: "smooth" });
   };
-  // -----------------------------------------------------
 
-  // 1) Fetch all outfits (with user-specific caching)
   useEffect(() => {
     const loadAndFetchOutfits = async () => {
       const cacheKey = getCacheKey("calendarOutfits");
@@ -71,14 +65,12 @@ export default function CalendarPage() {
     loadAndFetchOutfits();
   }, [currentUser, token]);
 
-  // Utility: Build a date string in format "YYYY-MM-DD" for a given day using viewDate's month/year
   const buildDateStr = (day, dateObj = viewDate) => {
     const month = dateObj.getMonth();
     const year = dateObj.getFullYear();
     return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   };
 
-  // 2) Prefetch the current day ±2 days immediately with user-specific keys
   useEffect(() => {
     if (!token || !currentUser) return;
     const now = new Date();
@@ -120,7 +112,7 @@ export default function CalendarPage() {
     }
   }, [token, viewDate, selectedDay, currentUser]);
 
-  // 3) In the background, prefetch the remaining days of the month
+  //In the background, prefetch the remaining days of the month
   useEffect(() => {
     if (!token || !currentUser) return;
     const daysInMonth = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 0).getDate();
@@ -160,7 +152,7 @@ export default function CalendarPage() {
     return () => clearTimeout(timeoutId);
   }, [token, viewDate, selectedDay, dailyOutfitsCache, currentUser]);
 
-  // 4) When the user selects a day, update dailyOutfit immediately from the cache (or fetch if missing)
+
   useEffect(() => {
     if (!selectedDay || !token || !currentUser) {
       setDailyOutfit(null);
@@ -188,7 +180,7 @@ export default function CalendarPage() {
     }
   }, [selectedDay, token, currentUser]);
 
-  // 5) Fetch current streak from backend
+  //Fetch current streak from backend
   useEffect(() => {
     if (!token) return;
     fetch("/api/streak", {
@@ -203,7 +195,6 @@ export default function CalendarPage() {
       .catch(console.error);
   }, [token]);
 
-  // Month/Year info
   const currentMonthName = MONTH_NAMES[viewDate.getMonth()];
   const currentYear = viewDate.getFullYear();
   const currentMonth = viewDate.getMonth();
@@ -242,7 +233,6 @@ export default function CalendarPage() {
     }
   }, [selectedDay]);
 
-  // 6) POST to assign outfit (update cache on success)
   const chooseDailyOutfit = (outfitId) => {
     if (submittingOutfit) return;
     setSubmittingOutfit(true);
@@ -276,7 +266,7 @@ export default function CalendarPage() {
       });
   };
 
-  // 7) DELETE to clear outfit (update cache on success)
+  // 7) DELETE to clear outfit 
   const deleteDailyOutfit = () => {
     const dateStr = buildDateStr(selectedDay);
     const cacheKey = getCacheKey(`dailyOutfit-${dateStr}`);

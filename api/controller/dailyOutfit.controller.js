@@ -4,10 +4,7 @@ import Outfit from "../models/outfit.model.js";
 import WardrobeItem from "../models/wardrobeItem.model.js";
 import { createError } from "../utils/error.js";
 
-/**
- * Assign an outfit to a given date (upsert).
- * Body: { date: "YYYY-MM-DD", outfitId: "..." }
- */
+
 export const setDailyOutfit = async (req, res, next) => {
   try {
     const { date, outfitId } = req.body;
@@ -62,10 +59,7 @@ export const setDailyOutfit = async (req, res, next) => {
   }
 };
 
-/**
- * Get the daily outfit for a specific date.
- * Example: GET /api/dailyOutfit/get/2025-03-14
- */
+
 export const getDailyOutfit = async (req, res, next) => {
   try {
     const dateStr = req.params.date;
@@ -93,10 +87,7 @@ export const getDailyOutfit = async (req, res, next) => {
   }
 };
 
-/**
- * Delete (clear) the daily outfit for a specific date, and decrement wearCount for each item.
- * Example: DELETE /api/dailyOutfit/delete/2025-03-14
- */
+
 export const deleteDailyOutfit = async (req, res, next) => {
   try {
     const dateStr = req.params.date;

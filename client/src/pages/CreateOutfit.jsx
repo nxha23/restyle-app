@@ -17,13 +17,10 @@ const CreateOutfit = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Toggle for hiding the remove ("X") buttons before screenshot
   const [hideRemoveButtons, setHideRemoveButtons] = useState(false);
 
-  // This ref will define the bounding box for drag constraints
   const outfitCanvasRef = useRef(null);
 
-  // Ref for the horizontal wardrobe items container (for arrow scrolling)
   const itemsContainerRef = useRef(null);
 
   useEffect(() => {
@@ -57,7 +54,6 @@ const CreateOutfit = () => {
 
   // When a wardrobe item is clicked, add it to the canvas
   const handleSelect = (item) => {
-    // Prevent duplicates
     if (selectedItems.some((i) => i._id === item._id)) return;
 
     setSelectedItems((prev) => [
@@ -96,7 +92,7 @@ const CreateOutfit = () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       const node = outfitCanvasRef.current;
 
-      // Use nested calls to toPng (Safari workaround + keep transparency)
+      // Use nested calls to toPng 
       await domtoimage.toPng(node, { bgcolor: "transparent" });
       await domtoimage.toPng(node, { bgcolor: "transparent" });
       const imgDataUrl = await domtoimage.toPng(node, { bgcolor: "transparent" });
@@ -104,7 +100,7 @@ const CreateOutfit = () => {
       // Restore remove buttons
       setHideRemoveButtons(false);
 
-      // Prepare clothing items data (only sending wardrobeItemId, x, and y)
+      // Prepare clothing items data
       const clothingItemsData = selectedItems.map((item) => ({
         wardrobeItemId: item._id,
         x: item.x,

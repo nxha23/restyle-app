@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { createError } from "../utils/error.js";
-// Import the seed function from seedChallenges.js. Adjust the path if needed.
+// Import the seed function from seedChallenges.js. 
 import { seedChallengesForUser } from "../../seedChallenges.js";
 
 export const signup = async (req, res, next) => {
@@ -33,7 +33,7 @@ export const signup = async (req, res, next) => {
       .json({
         success: true,
         message: "User created successfully!",
-        token, // so the frontend can store it
+        token, 
         user: rest,
       });
   } catch (err) {
@@ -89,7 +89,7 @@ export const google = async (req, res, next) => {
           user: rest,
         });
     } else {
-      // Create a new user for Google sign-in
+      // Create a new user for sign-in
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
@@ -104,7 +104,7 @@ export const google = async (req, res, next) => {
       });
       await newUser.save();
 
-      // Seed challenges for the new Google user.
+      // Seed challenges for the new user.
       await seedChallengesForUser(newUser._id);
 
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {

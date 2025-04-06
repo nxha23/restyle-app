@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import mongoose from "mongoose";
-import Challenge from "./api/models/challenge.model.js"; // Adjust the path if needed
+import Challenge from "./api/models/challenge.model.js"; 
 
 // Default challenge data
 export const defaultChallenges = [
@@ -13,12 +13,12 @@ export const defaultChallenges = [
   { challengeType: "Repair / upcycle 5 items this month", goal: 5 },
 ];
 
-// This function seeds challenges for a single user.
-// The fix: converting the userId (an ObjectId) to a string.
+ 
+// seeds challenges for a single user.
 export const seedChallengesForUser = async (userId) => {
   try {
     const challenges = defaultChallenges.map((challenge) => ({
-      userRef: userId.toString(), // Convert ObjectId to string to match your schema
+      userRef: userId.toString(), 
       challengeType: challenge.challengeType,
       goal: challenge.goal,
       locked: true,
@@ -31,7 +31,6 @@ export const seedChallengesForUser = async (userId) => {
   }
 };
 
-// Optional: If you want to seed challenges for all existing users
 export const seedAllChallenges = async () => {
   try {
     console.log("Seed all challenges function called.");

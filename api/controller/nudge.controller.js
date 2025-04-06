@@ -8,13 +8,13 @@ dotenv.config();
 
 export const getDailyNudge = async (req, res, next) => {
   try {
-    // 2) Check your OpenAI key
+    // 2) Check  OpenAI key
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
     if (!OPENAI_API_KEY) {
       return next(createError(500, "No OpenAI API key found in .env"));
     }
 
-    // 3) Build your prompt
+    // 3) Build prompt
     const prompt = `
       You are an AI that provides short eco-friendly clothing tips or challenges.
       Give me a single short tip or challenge (1-2 sentences).

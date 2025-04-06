@@ -11,7 +11,6 @@ const DeleteOutfitModal = ({ outfit, onClose, onDelete }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      {/* Use an arbitrary value class to get a translucent background */}
       <div className="bg-[rgba(71,69,69)] rounded p-6 w-80">
         <h2 className="text-xl font-bold mb-4">Delete Outfit</h2>
         {outfit.screenshot ? (

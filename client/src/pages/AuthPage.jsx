@@ -13,7 +13,6 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.user);
 
-  // Toggle: false => Sign In, true => Sign Up
   const [isSignUp, setIsSignUp] = useState(false);
 
   // Shared form data
@@ -51,8 +50,6 @@ export default function AuthPage() {
           dispatch(signInFailure(data.message));
           return;
         }
-        // Successfully created new user
-        // Option: auto login (if you want), or just prompt to sign in
         console.log('Account created! Please sign in.');
         setIsSignUp(false);
 
@@ -74,22 +71,19 @@ export default function AuthPage() {
           return;
         }
 
-        // data => { success: true, token: "...", user: {...} }
         // Store token in localStorage
         if (data.token) {
           localStorage.setItem('accessToken', data.token);
         }
 
-        // Merge user + token into one payload if you want
         const userPayload = {
           ...data.user,
           token: data.token,
         };
 
-        // Dispatch signInSuccess with the user payload
         dispatch(signInSuccess(userPayload));
 
-        // Navigate to Wardrobe or wherever
+        // Navigate to Wardrobe
         navigate('/wardrobe');
       }
     } catch (err) {

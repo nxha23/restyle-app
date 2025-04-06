@@ -19,7 +19,7 @@ import {
   signOutUserSuccess,
   signOutUserFailure,
 } from '../redux/user/userSlice';
-import "../styles/Profile.css"; // Import the new Profile.css
+import "../styles/Profile.css"; 
 
 export default function Profile() {
   const dispatch = useDispatch();
