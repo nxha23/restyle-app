@@ -27,9 +27,17 @@
 
 Follow these steps to run ReStyle locally:
 
-### Step 1: Install Dependencies and Run the Backend
+### Step 1: Install Root-Level Dependencies
 
 From the root folder, open a terminal and run:
+
+```bash
+npm install
+```
+
+### Step 2: Install Dependencies and Run the Backend
+
+From the root folder, run:
 
 ```bash
 cd api
@@ -43,7 +51,7 @@ The backend server will be running on:
 http://localhost:3000
 ```
 
-### Step 2: Install Dependencies and Run the Frontend
+### Step 3: Install Dependencies and Run the Frontend
 
 In another terminal, navigate from the root folder and run:
 
@@ -63,4 +71,3 @@ http://localhost:5173
 
 If you would like to view the live version, please visit:  
 [restyle-app.onrender.com](https://restyle-app.onrender.com)
-
